@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lxl.dao.OfficetoolMapper">
+    <!--查询列表-->
+    <select id="selectObject" resultType="com.lxl.pojo.Officetool">
+        SELECT * FROM `t_officetool` o LEFT JOIN `t_type` t ON o.typeid = t.id
+         <where>
+             <if test="officetool.name!=null and officetool.name!=''">
+                and name like concat('%',#{officetool.name},'%')
+             </if>
+             <if test="officetool.description!=null and officetool.description!=''">
+                and description like concat('%',#{officetool.description},'%')
+             </if>
+             <if test="officetool.startDt!=null">
+                and dt >=#{officetool.startDt}
+             </if>
+             <if test="officetool.endDt!=null">
+                and dt &lt;=#{officetool.endDt}
+             </if>
+
+         </where>
+
+    </select>
+    <!--添加-->
+    <insert id="insert" >
+       INSERT INTO`t_officetool` VALUES
+       (null,#{name},#{description},#{typeid},#{price},#{num},#{dt},#{supplier},#{username})
+    </insert>
+    <!--修改-->
+    <update id="update">
+
+     UPDATE `t_officetool` SET NAME = #{name},description=#{description},typeid=#{typeid},price=#{price},num=#{num},dt=#{dt},supplier=#{supplier},username=#{username} where id = #{id}
+
+    </update>
+        <!--删除-->
+    <delete id="deleteById">
+        DELETE FROM `t_officetool` WHERE id in (${ids})
+    </delete>
+    <!--查询单个对象-->
+    <select id="getById" resultType="com.lxl.pojo.Officetool">
+       SELECT o.*,t.tname FROM `t_officetool` o LEFT JOIN `t_type` t
+        ON o.typeid = t.id WHERE o.id = #{id}
+
+    </select>
+
+</mapper>
